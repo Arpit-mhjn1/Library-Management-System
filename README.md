@@ -75,7 +75,7 @@ Library-Management-System
 # 📸 Screenshots
 ![Dashboard](screenshots/Dashboard.png)
 ![Book Catalogue](screenshots/Books.png)
-![Issue Book](C:\Users\mahaj\OneDrive\Pictures\Screenshots\History.png)
+![Issue Book](Screenshots\History.png)
 
 
 ---
