@@ -4,47 +4,47 @@ A modern **Library Management System** built using **HTML, CSS, and JavaScript**
 
 ---
 
-# 🚀 Features
+## Features
 
-### 📊 Dashboard
+###  Dashboard
 
 * Overview of total books, members, borrowed books, and overdue books
 * Recent library activity feed
 * Visual representation of books by genre
 
-### 📚 Book Management
+###  Book Management
 
 * Add new books to the catalogue
 * Edit or delete book records
 * Search books by title, author, or ISBN
 * Filter books by genre or availability status
 
-### 📤 Book Issue System
+###  Book Issue System
 
 * Issue books to registered members
 * Select due date for borrowing
 * Real-time update of book availability
 
-### 📥 Returns & Overdue Tracking
+###  Returns & Overdue Tracking
 
 * Track all borrowed books
 * Highlight overdue books
 * Process book returns with one click
 
-### 👥 Member Management
+###  Member Management
 
 * Register new members
 * View member details and borrowing records
 * Remove members (if no active borrowings)
 
-### 📋 Borrow History
+### Borrow History
 
 * Complete log of issued and returned books
 * Track borrowing activity for transparency
 
 ---
 
-# 🛠️ Tech Stack
+##  Tech Stack
 
 **Frontend**
 
@@ -60,7 +60,7 @@ A modern **Library Management System** built using **HTML, CSS, and JavaScript**
 
 ---
 
-# 📂 Project Structure
+## 📂 Project Structure
 
 ```
 Library-Management-System
@@ -72,7 +72,7 @@ Library-Management-System
 
 ---
 
-# 🎯 Future Improvements
+##  Future Improvements
 
 * Database integration (MySQL / MongoDB)
 * Authentication system for librarians
@@ -88,5 +88,3 @@ Library-Management-System
 Student | Developer | Tech Enthusiast
 
 ---
-
-If you want, I can also show you **3 things that make a GitHub README look like a professional developer project (used by top GitHub repos)** — which will make your **portfolio look much stronger to recruiters and improve ATS perception.**
