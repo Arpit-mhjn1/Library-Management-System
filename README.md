@@ -69,14 +69,6 @@ Library-Management-System
 ├── README.md         # Project documentation
 ```
 
----
-
-
-# 📸 Screenshots
-![Dashboard](Screenshots/Dashboard.png)
-![Book Catalogue](Screenshots/Books.png)
-![Issue Book History](Screenshots/History.png)
-
 
 ---
 
