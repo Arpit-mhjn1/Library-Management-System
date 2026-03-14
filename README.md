@@ -73,9 +73,9 @@ Library-Management-System
 
 
 # 📸 Screenshots
-![Dashboard](screenshots/Dashboard.png)
-![Book Catalogue](screenshots/Books.png)
-![Issue Book](Screenshots\History.png)
+![Dashboard](Screenshots/Dashboard.png)
+![Book Catalogue](Screenshots/Books.png)
+![Issue Book History](Screenshots/History.png)
 
 
 ---
