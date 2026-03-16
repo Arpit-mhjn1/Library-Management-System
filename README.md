@@ -71,7 +71,10 @@ Library-Management-System
 
 
 ---
-
+## OUtput
+[!Books](https://github.com/Arpit-mhjn1/Library-Management-System/blob/main/Books.png?raw=true)
+[!Dashboard](https://github.com/Arpit-mhjn1/Library-Management-System/blob/main/Dashboard.png?raw=true)
+[!History](https://github.com/Arpit-mhjn1/Library-Management-System/blob/main/History.png?raw=true)
 ##  Future Improvements
 
 * Database integration (MySQL / MongoDB)
