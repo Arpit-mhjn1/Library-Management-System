@@ -72,7 +72,7 @@ Library-Management-System
 
 ---
 ## OUtput
-[![Books](https://github.com/Arpit-mhjn1/Arpit-mhjn1/blob/main/Books.png?raw=true)](https://github.com/Arpit-mhjn1)
+[![Books]Books.png](https://github.com/Arpit-mhjn1)
 [![Dashboard](https://github.com/Arpit-mhjn1/Arpit-mhjn1/blob/main/Dashboard.png?raw=true)](https://github.com/Arpit-mhjn1)
 [![History](https://github.com/Arpit-mhjn1/Arpit-mhjn1/blob/main/History.png?raw=true)](https://github.com/Arpit-mhjn1)
 ##  Future Improvements
