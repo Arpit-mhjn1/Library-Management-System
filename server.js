@@ -18,7 +18,29 @@ async function initDB() {
         const initialData = {
             books: [
               {id:1,title:'The Great Gatsby',author:'F. Scott Fitzgerald',isbn:'978-0-7432-7356-5',genre:'Fiction',year:1925,copies:3,available:2,desc:'A story of the Jazz Age and the American Dream.'},
-              {id:2,title:'A Brief History of Time',author:'Stephen Hawking',isbn:'978-0-553-38016-3',genre:'Science',year:1988,copies:2,available:2,desc:'Cosmology for the general reader.'}
+              {id:2,title:'A Brief History of Time',author:'Stephen Hawking',isbn:'978-0-553-38016-3',genre:'Science',year:1988,copies:2,available:2,desc:'Cosmology for the general reader.'},
+              {id:3,title:'Sapiens',author:'Yuval Noah Harari',isbn:'978-0-06-231609-7',genre:'History',year:2011,copies:4,available:3,desc:'A brief history of humankind.'},
+              {id:4,title:'1984',author:'George Orwell',isbn:'978-0-452-28423-4',genre:'Fiction',year:1949,copies:3,available:1,desc:'A dystopian social science fiction novel.'},
+              {id:5,title:'Clean Code',author:'Robert C. Martin',isbn:'978-0-13-235088-4',genre:'Technology',year:2008,copies:2,available:2,desc:'A handbook of agile software craftsmanship.'},
+              {id:6,title:'The Alchemist',author:'Paulo Coelho',isbn:'978-0-06-231500-7',genre:'Fiction',year:1988,copies:5,available:4,desc:'A philosophical novel about following your dreams.'},
+              {id:7,title:'To Kill a Mockingbird',author:'Harper Lee',isbn:'978-0-06-112008-4',genre:'Fiction',year:1960,copies:5,available:5,desc:'A novel about the serious issues of rape and racial inequality.'},
+              {id:8,title:'Pride and Prejudice',author:'Jane Austen',isbn:'978-0-14-143951-8',genre:'Romance',year:1813,copies:4,available:4,desc:'A romantic novel of manners.'},
+              {id:9,title:'The Hobbit',author:'J.R.R. Tolkien',isbn:'978-0-547-92822-7',genre:'Fantasy',year:1937,copies:6,available:6,desc:'A children\'s fantasy novel.'},
+              {id:10,title:'Harry Potter and the Sorcerer\'s Stone',author:'J.K. Rowling',isbn:'978-0-590-35342-7',genre:'Fantasy',year:1997,copies:7,available:7,desc:'The first novel in the Harry Potter series.'},
+              {id:11,title:'The Lord of the Rings',author:'J.R.R. Tolkien',isbn:'978-0-618-64015-7',genre:'Fantasy',year:1954,copies:3,available:3,desc:'An epic high-fantasy novel.'},
+              {id:12,title:'The Catcher in the Rye',author:'J.D. Salinger',isbn:'978-0-316-76948-7',genre:'Fiction',year:1951,copies:4,available:4,desc:'A story of teenage rebellion.'},
+              {id:13,title:'Thinking, Fast and Slow',author:'Daniel Kahneman',isbn:'978-0-374-53355-7',genre:'Non-Fiction',year:2011,copies:3,available:3,desc:'A book on behavioral psychology and decision-making.'},
+              {id:14,title:'Atomic Habits',author:'James Clear',isbn:'978-0-7352-1129-2',genre:'Self-Help',year:2018,copies:8,available:8,desc:'An easy and proven way to build good habits and break bad ones.'},
+              {id:15,title:'The Power of Habit',author:'Charles Duhigg',isbn:'978-0-8129-8160-5',genre:'Self-Help',year:2012,copies:2,available:2,desc:'Why we do what we do in life and business.'},
+              {id:16,title:'Educated',author:'Tara Westover',isbn:'978-0-399-59050-4',genre:'Biography',year:2018,copies:5,available:5,desc:'A memoir about growing up in a strict and abusive household.'},
+              {id:17,title:'Steve Jobs',author:'Walter Isaacson',isbn:'978-1-4516-4853-9',genre:'Biography',year:2011,copies:3,available:3,desc:'The exclusive biography of Steve Jobs.'},
+              {id:18,title:'Design Patterns',author:'Erich Gamma',isbn:'978-0-201-63361-0',genre:'Technology',year:1994,copies:2,available:2,desc:'Elements of Reusable Object-Oriented Software.'},
+              {id:19,title:'Introduction to Algorithms',author:'Thomas H. Cormen',isbn:'978-0-262-03384-8',genre:'Technology',year:2009,copies:1,available:1,desc:'A comprehensive textbook on computer algorithms.'},
+              {id:20,title:'The Pragmatic Programmer',author:'Andrew Hunt',isbn:'978-0-201-61622-4',genre:'Technology',year:1999,copies:3,available:3,desc:'From journeyman to master.'},
+              {id:21,title:'Cosmos',author:'Carl Sagan',isbn:'978-0-345-33135-9',genre:'Science',year:1980,copies:4,available:4,desc:'The story of fifteen billion years of cosmic evolution.'},
+              {id:22,title:'The Selfish Gene',author:'Richard Dawkins',isbn:'978-0-19-929115-1',genre:'Science',year:1976,copies:2,available:2,desc:'A book on evolution by natural selection.'},
+              {id:23,title:'The Girl with the Dragon Tattoo',author:'Stieg Larsson',isbn:'978-0-307-26975-1',genre:'Mystery',year:2005,copies:5,available:5,desc:'A psychological thriller.'},
+              {id:24,title:'Gone Girl',author:'Gillian Flynn',isbn:'978-0-307-58836-4',genre:'Mystery',year:2012,copies:4,available:4,desc:'A thriller novel about a missing wife.'}
             ], 
             members: [
               {id:1,first:'Arjun',last:'Sharma',email:'arjun@example.com',phone:'+91 98765 43210',address:'Ludhiana, Punjab',joined:'2024-01-15',color:'#8b5e3c'},
