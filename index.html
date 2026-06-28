@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bibliotheca — Library Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+ 
+<!-- ═══ HEADER ═══ -->
+<header>
+  <div class="logo">
+    <span class="logo-title">AGC Library Management System</span>
+  </div>
+  <div class="header-stats">
+    <div class="stat-chip">
+      <span class="num" id="h-total">0</span>
+      <span class="lbl">Books</span>
+    </div>
+    <div class="stat-chip">
+      <span class="num" id="h-members">0</span>
+      <span class="lbl">Members</span>
+    </div>
+    <div class="stat-chip">
+      <span class="num" id="h-borrowed">0</span>
+      <span class="lbl">Borrowed</span>
+    </div>
+    <div class="stat-chip">
+      <span class="num" id="h-overdue">0</span>
+      <span class="lbl">Overdue</span>
+    </div>
+  </div>
+</header>
+ 
+<!-- ═══ APP ═══ -->
+<div class="app">
+ 
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">Catalogue</div>
+    <button class="nav-btn active" onclick="navigate('dashboard')">
+      <span class="icon">📊</span> Dashboard
+    </button>
+    <button class="nav-btn" onclick="navigate('books')">
+      <span class="icon">📚</span> Books
+    </button>
+ 
+    <div class="sidebar-section">Circulation</div>
+    <button class="nav-btn" onclick="navigate('borrow')">
+      <span class="icon">📤</span> Issue Book
+    </button>
+    <button class="nav-btn" onclick="navigate('returns')">
+      <span class="icon">📥</span> Returns
+      <span class="nav-badge" id="overdue-badge">0</span>
+    </button>
+ 
+    <div class="sidebar-section">People</div>
+    <button class="nav-btn" onclick="navigate('members')">
+      <span class="icon">👥</span> Members
+    </button>
+ 
+    <div class="sidebar-section">Records</div>
+    <button class="nav-btn" onclick="navigate('history')">
+      <span class="icon">📋</span> History
+    </button>
+  </aside>
+ 
+  <!-- MAIN -->
+  <main>
+ 
+    <!-- ── DASHBOARD ── -->
+    <div id="view-dashboard" class="view active">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Good day, Librarian</div>
+          <div class="page-subtitle">Here's what's happening in your library today</div>
+        </div>
+      </div>
+ 
+      <div class="dash-grid">
+        <div class="dash-card c1">
+          <span class="dash-icon">📚</span>
+          <div class="dash-num" id="d-total">0</div>
+          <div class="dash-label">Total Books</div>
+        </div>
+        <div class="dash-card c2">
+          <span class="dash-icon">✅</span>
+          <div class="dash-num" id="d-available">0</div>
+          <div class="dash-label">Available</div>
+        </div>
+        <div class="dash-card c3">
+          <span class="dash-icon">📤</span>
+          <div class="dash-num" id="d-borrowed">0</div>
+          <div class="dash-label">Borrowed</div>
+        </div>
+        <div class="dash-card c4">
+          <span class="dash-icon">👥</span>
+          <div class="dash-num" id="d-members">0</div>
+          <div class="dash-label">Members</div>
+        </div>
+      </div>
+ 
+      <div class="dash-row">
+        <div class="dash-panel">
+          <div class="panel-head">Recent Activity</div>
+          <div class="panel-body" id="activity-feed">
+            <div class="empty-state" style="padding:1.5rem 0">
+              <p>No activity recorded yet.</p>
+            </div>
+          </div>
+        </div>
+        <div class="dash-panel">
+          <div class="panel-head">Books by Genre</div>
+          <div class="panel-body">
+            <div class="genre-bars" id="genre-chart"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- ── BOOKS ── -->
+    <div id="view-books" class="view">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Book Catalogue</div>
+          <div class="page-subtitle">Manage your library's collection</div>
+        </div>
+        <button class="btn btn-primary" onclick="openBookModal()">＋ Add Book</button>
+      </div>
+      <div class="search-bar">
+        <input class="search-input" id="book-search" placeholder="Search by title, author, or ISBN…" oninput="renderBooks()">
+        <select class="filter-select" id="genre-filter" onchange="renderBooks()">
+          <option value="">All Genres</option>
+          <option>Fiction</option>
+          <option>Non-Fiction</option>
+          <option>Science</option>
+          <option>History</option>
+          <option>Biography</option>
+          <option>Mystery</option>
+          <option>Fantasy</option>
+          <option>Romance</option>
+          <option>Technology</option>
+          <option>Self-Help</option>
+          <option>Children</option>
+          <option>Poetry</option>
+        </select>
+        <select class="filter-select" id="status-filter" onchange="renderBooks()">
+          <option value="">All Status</option>
+          <option>Available</option>
+          <option>Borrowed</option>
+        </select>
+      </div>
+      <div class="book-grid" id="book-grid"></div>
+    </div>
+ 
+    <!-- ── ISSUE BOOK ── -->
+    <div id="view-borrow" class="view">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Issue a Book</div>
+          <div class="page-subtitle">Lend a book to a registered member</div>
+        </div>
+      </div>
+ 
+      <div style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:2rem;max-width:520px;box-shadow:0 2px 8px var(--shadow);">
+        <div class="form-group" style="margin-bottom:1rem">
+          <label>Member</label>
+          <select id="borrow-member" class="filter-select" style="width:100%">
+            <option value="">— Select Member —</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:1rem">
+          <label>Book</label>
+          <select id="borrow-book" class="filter-select" style="width:100%">
+            <option value="">— Select Available Book —</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:1.5rem">
+          <label>Due Date</label>
+          <input type="date" id="borrow-due" style="width:100%">
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;padding:.75rem" onclick="issueBook()">Issue Book</button>
+      </div>
+    </div>
+ 
+    <!-- ── RETURNS ── -->
+    <div id="view-returns" class="view">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Returns & Overdue</div>
+          <div class="page-subtitle">Track borrowed books and process returns</div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Book Title</th>
+              <th>Member</th>
+              <th>Borrowed</th>
+              <th>Due Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="returns-table"></tbody>
+        </table>
+      </div>
+    </div>
+ 
+    <!-- ── MEMBERS ── -->
+    <div id="view-members" class="view">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Members</div>
+          <div class="page-subtitle">Registered library members</div>
+        </div>
+        <button class="btn btn-primary" onclick="openMemberModal()">＋ Add Member</button>
+      </div>
+      <div class="search-bar">
+        <input class="search-input" id="member-search" placeholder="Search by name or email…" oninput="renderMembers()">
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Joined</th>
+              <th>Borrowed</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="members-table"></tbody>
+        </table>
+      </div>
+    </div>
+ 
+    <!-- ── HISTORY ── -->
+    <div id="view-history" class="view">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Borrow History</div>
+          <div class="page-subtitle">Complete circulation log</div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Book Title</th>
+              <th>Member</th>
+              <th>Issued</th>
+              <th>Returned</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="history-table"></tbody>
+        </table>
+      </div>
+    </div>
+ 
+  </main>
+</div>
+ 
+<!-- ═══ BOOK MODAL ═══ -->
+<div class="modal-overlay" id="book-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="book-modal-title">Add New Book</span>
+      <button class="modal-close" onclick="closeModal('book-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Title *</label>
+          <input type="text" id="b-title" placeholder="Book title">
+        </div>
+        <div class="form-group">
+          <label>Author *</label>
+          <input type="text" id="b-author" placeholder="Author name">
+        </div>
+        <div class="form-group">
+          <label>ISBN</label>
+          <input type="text" id="b-isbn" placeholder="978-…">
+        </div>
+        <div class="form-group">
+          <label>Genre</label>
+          <select id="b-genre">
+            <option>Fiction</option><option>Non-Fiction</option><option>Science</option>
+            <option>History</option><option>Biography</option><option>Mystery</option>
+            <option>Fantasy</option><option>Romance</option><option>Technology</option>
+            <option>Self-Help</option><option>Children</option><option>Poetry</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Year</label>
+          <input type="number" id="b-year" placeholder="2024" min="1000" max="2100">
+        </div>
+        <div class="form-group">
+          <label>Copies</label>
+          <input type="number" id="b-copies" value="1" min="1">
+        </div>
+        <div class="form-group full">
+          <label>Description</label>
+          <textarea id="b-desc" placeholder="Brief description…"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('book-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveBook()">Save Book</button>
+    </div>
+  </div>
+</div>
+ 
+<!-- ═══ MEMBER MODAL ═══ -->
+<div class="modal-overlay" id="member-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="member-modal-title">Add New Member</span>
+      <button class="modal-close" onclick="closeModal('member-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>First Name *</label>
+          <input type="text" id="m-first" placeholder="First name">
+        </div>
+        <div class="form-group">
+          <label>Last Name *</label>
+          <input type="text" id="m-last" placeholder="Last name">
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="m-email" placeholder="email@example.com">
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="tel" id="m-phone" placeholder="+91 …">
+        </div>
+        <div class="form-group full">
+          <label>Address</label>
+          <input type="text" id="m-address" placeholder="Street, City">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('member-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveMember()">Save Member</button>
+    </div>
+  </div>
+</div>
+ 
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+ 
+<script src="script.js"></script>
+
+</body>
+</html>
+ 
