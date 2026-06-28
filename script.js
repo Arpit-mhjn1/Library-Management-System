@@ -1,7 +1,8 @@
 // ════════════════════════════════════════════
-//  DATA STORE
+//  DATA STORE & FETCH API
 // ════════════════════════════════════════════
  
+const API_URL = '/api';
 const COLORS = ['#8b5e3c','#6b7c5a','#b84c2a','#c9a84c','#5a6e8b','#7a5e8b','#3d7a5a','#8b3d5a'];
 const GENRE_COLORS = {
   'Fiction':'#8b5e3c','Non-Fiction':'#6b7c5a','Science':'#5a6e8b','History':'#c9a84c',
@@ -9,51 +10,44 @@ const GENRE_COLORS = {
   'Technology':'#2a5a8b','Self-Help':'#6b7c5a','Children':'#b84c2a','Poetry':'#c9a84c'
 };
  
-let books = [
-  {id:1,title:'The Great Gatsby',author:'F. Scott Fitzgerald',isbn:'978-0-7432-7356-5',genre:'Fiction',year:1925,copies:3,available:2,desc:'A story of the Jazz Age and the American Dream.'},
-  {id:2,title:'A Brief History of Time',author:'Stephen Hawking',isbn:'978-0-553-38016-3',genre:'Science',year:1988,copies:2,available:2,desc:'Cosmology for the general reader.'},
-  {id:3,title:'Sapiens',author:'Yuval Noah Harari',isbn:'978-0-06-231609-7',genre:'History',year:2011,copies:4,available:3,desc:'A brief history of humankind.'},
-  {id:4,title:'1984',author:'George Orwell',isbn:'978-0-452-28423-4',genre:'Fiction',year:1949,copies:3,available:1,desc:'A dystopian social science fiction novel.'},
-  {id:5,title:'Clean Code',author:'Robert C. Martin',isbn:'978-0-13-235088-4',genre:'Technology',year:2008,copies:2,available:2,desc:'A handbook of agile software craftsmanship.'},
-  {id:6,title:'The Alchemist',author:'Paulo Coelho',isbn:'978-0-06-231500-7',genre:'Fiction',year:1988,copies:5,available:4,desc:'A philosophical novel about following your dreams.'},
-];
- 
-let members = [
-  {id:1,first:'Arjun',last:'Sharma',email:'arjun@example.com',phone:'+91 98765 43210',address:'Ludhiana, Punjab',joined:'2024-01-15',color:'#8b5e3c'},
-  {id:2,first:'Priya',last:'Nair',email:'priya@example.com',phone:'+91 87654 32109',address:'Chandigarh, Punjab',joined:'2024-03-22',color:'#6b7c5a'},
-  {id:3,first:'Rohit',last:'Verma',email:'rohit@example.com',phone:'+91 76543 21098',address:'Amritsar, Punjab',joined:'2024-06-10',color:'#5a6e8b'},
-];
- 
-let borrows = [
-  {id:1,bookId:4,memberId:1,issued:'2025-02-20',due:'2026-03-10',returned:null},
-  {id:2,bookId:1,memberId:2,issued:'2025-02-25',due:'2026-03-15',returned:null},
-  {id:3,bookId:6,memberId:3,issued:'2025-01-10',due:'2025-01-25',returned:'2025-01-24'},
-];
- 
-let activity = [
-  {type:'borrow',text:'Arjun borrowed 1984',time:'2 days ago'},
-  {type:'borrow',text:'Priya borrowed The Great Gatsby',time:'5 days ago'},
-  {type:'return',text:'Rohit returned The Alchemist',time:'1 week ago'},
-  {type:'new',text:'Clean Code added to catalogue',time:'2 weeks ago'},
-];
+let books = [];
+let members = [];
+let borrows = [];
+let activity = [];
  
 let editingBookId = null;
 let editingMemberId = null;
-let nextBookId = 7;
-let nextMemberId = 4;
-let nextBorrowId = 4;
+
+async function fetchData() {
+    try {
+        const [booksRes, membersRes, borrowsRes, activityRes] = await Promise.all([
+            fetch(`${API_URL}/books`),
+            fetch(`${API_URL}/members`),
+            fetch(`${API_URL}/borrows`),
+            fetch(`${API_URL}/activity`)
+        ]);
+        books = await booksRes.json();
+        members = await membersRes.json();
+        borrows = await borrowsRes.json();
+        activity = await activityRes.json();
+    } catch (e) {
+        console.error("Failed to load data:", e);
+        toast("Error loading data from server.");
+    }
+}
  
 // ════════════════════════════════════════════
 //  NAVIGATION
 // ════════════════════════════════════════════
  
-function navigate(view) {
+async function navigate(view) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('view-' + view).classList.add('active');
   const btns = document.querySelectorAll('.nav-btn');
   btns.forEach(b => { if(b.getAttribute('onclick').includes(`'${view}'`)) b.classList.add('active'); });
- 
+  
+  await fetchData(); // refresh data on navigate
   if(view==='books') renderBooks();
   if(view==='dashboard') renderDashboard();
   if(view==='borrow') renderBorrowForm();
@@ -77,13 +71,15 @@ function renderDashboard() {
  
   // Activity
   const feed = document.getElementById('activity-feed');
-  if(!activity.length){ feed.innerHTML='<div class="empty-state" style="padding:1.5rem 0"><p>No activity yet.</p></div>'; return; }
-  feed.innerHTML = activity.slice(0,6).map(a=>`
-    <div class="activity-item">
-      <div class="act-dot ${a.type}"></div>
-      <div class="act-text">${a.text}</div>
-      <div class="act-time">${a.time}</div>
-    </div>`).join('');
+  if(!activity.length){ feed.innerHTML='<div class="empty-state" style="padding:1.5rem 0"><p>No activity yet.</p></div>'; }
+  else {
+      feed.innerHTML = activity.slice(0,6).map(a=>`
+        <div class="activity-item">
+          <div class="act-dot ${a.type}"></div>
+          <div class="act-text">${a.text}</div>
+          <div class="act-time">${a.time}</div>
+        </div>`).join('');
+  }
  
   // Genre chart
   const counts = {};
@@ -165,46 +161,46 @@ function openBookModal(id=null) {
   document.getElementById('book-modal').classList.add('open');
 }
  
-function saveBook() {
+async function saveBook() {
   const title = document.getElementById('b-title').value.trim();
   const author = document.getElementById('b-author').value.trim();
   if(!title||!author){ toast('Title and Author are required.'); return; }
  
-  if(editingBookId) {
-    const b = books.find(x=>x.id===editingBookId);
-    const diff = parseInt(document.getElementById('b-copies').value)||1 - b.copies;
-    b.title = title; b.author = author; b.isbn = document.getElementById('b-isbn').value;
-    b.genre = document.getElementById('b-genre').value; b.year = parseInt(document.getElementById('b-year').value)||0;
-    b.copies = parseInt(document.getElementById('b-copies').value)||1;
-    b.available = Math.max(0, b.available + diff);
-    b.desc = document.getElementById('b-desc').value;
-    toast('Book updated successfully.');
-  } else {
-    const copies = parseInt(document.getElementById('b-copies').value)||1;
-    books.push({
-      id: nextBookId++,
+  let bData = {
       title, author,
       isbn: document.getElementById('b-isbn').value,
       genre: document.getElementById('b-genre').value,
       year: parseInt(document.getElementById('b-year').value)||0,
-      copies, available: copies,
+      copies: parseInt(document.getElementById('b-copies').value)||1,
       desc: document.getElementById('b-desc').value
-    });
-    activity.unshift({type:'new',text:`"${title}" added to catalogue`,time:'Just now'});
+  };
+
+  if(editingBookId) {
+    const b = books.find(x=>x.id===editingBookId);
+    const diff = bData.copies - b.copies;
+    bData.available = Math.max(0, b.available + diff);
+    await fetch(`${API_URL}/books/${editingBookId}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(bData) });
+    toast('Book updated successfully.');
+  } else {
+    bData.available = bData.copies;
+    await fetch(`${API_URL}/books`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(bData) });
+    await fetch(`${API_URL}/activity`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({type:'new',text:`"${title}" added to catalogue`,time:'Just now'}) });
     toast('Book added to catalogue.');
   }
  
   closeModal('book-modal');
+  await fetchData();
   renderBooks();
   updateHeader();
 }
  
-function deleteBook(id) {
+async function deleteBook(id) {
   if(!confirm('Remove this book from the catalogue?')) return;
   const active = borrows.filter(b=>!b.returned && b.bookId===id);
   if(active.length){ toast('Cannot delete — book is currently borrowed.'); return; }
-  books = books.filter(b=>b.id!==id);
+  await fetch(`${API_URL}/books/${id}`, { method: 'DELETE' });
   toast('Book removed.');
+  await fetchData();
   renderBooks();
   updateHeader();
 }
@@ -227,7 +223,7 @@ function renderBorrowForm() {
   due.value = d.toISOString().split('T')[0];
 }
  
-function issueBook() {
+async function issueBook() {
   const mid = parseInt(document.getElementById('borrow-member').value);
   const bid = parseInt(document.getElementById('borrow-book').value);
   const due = document.getElementById('borrow-due').value;
@@ -238,11 +234,16 @@ function issueBook() {
   const member = members.find(m=>m.id===mid);
   if(!book||book.available<=0){ toast('Book not available.'); return; }
  
+  // update book availability
   book.available--;
-  borrows.push({id:nextBorrowId++,bookId:bid,memberId:mid,issued:new Date().toISOString().split('T')[0],due,returned:null});
-  activity.unshift({type:'borrow',text:`${member.first} borrowed "${book.title}"`,time:'Just now'});
+  await fetch(`${API_URL}/books/${bid}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(book) });
+
+  // issue borrow
+  await fetch(`${API_URL}/borrows`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({bookId:bid, memberId:mid, issued:new Date().toISOString().split('T')[0], due, returned:null}) });
+  await fetch(`${API_URL}/activity`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({type:'borrow',text:`${member.first} borrowed "${book.title}"`,time:'Just now'}) });
  
   toast(`"${book.title}" issued to ${member.first} ${member.last}.`);
+  await fetchData();
   renderBorrowForm();
   updateHeader();
 }
@@ -278,15 +279,23 @@ function renderReturns() {
   }).join('');
 }
  
-function returnBook(id) {
+async function returnBook(id) {
   const borrow = borrows.find(b=>b.id===id);
   if(!borrow) return;
-  borrow.returned = new Date().toISOString().split('T')[0];
+  const returnedDate = new Date().toISOString().split('T')[0];
+  
+  await fetch(`${API_URL}/borrows/${id}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify({returned: returnedDate}) });
+
   const book = books.find(b=>b.id===borrow.bookId);
   const member = members.find(m=>m.id===borrow.memberId);
-  if(book) book.available++;
-  activity.unshift({type:'return',text:`${member?.first||'Member'} returned "${book?.title||'book'}"`,time:'Just now'});
+  if(book) {
+      book.available++;
+      await fetch(`${API_URL}/books/${book.id}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(book) });
+  }
+  await fetch(`${API_URL}/activity`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({type:'return',text:`${member?.first||'Member'} returned "${book?.title||'book'}"`,time:'Just now'}) });
+  
   toast('Book returned successfully.');
+  await fetchData();
   renderReturns();
   updateHeader();
 }
@@ -333,40 +342,41 @@ function openMemberModal(id=null) {
   document.getElementById('member-modal').classList.add('open');
 }
  
-function saveMember() {
+async function saveMember() {
   const first = document.getElementById('m-first').value.trim();
   const last = document.getElementById('m-last').value.trim();
   const email = document.getElementById('m-email').value.trim();
   if(!first||!last||!email){ toast('Name and email are required.'); return; }
  
+  const mData = {
+      first, last, email,
+      phone: document.getElementById('m-phone').value,
+      address: document.getElementById('m-address').value
+  };
+
   if(editingMemberId) {
-    const m = members.find(x=>x.id===editingMemberId);
-    m.first=first; m.last=last; m.email=email;
-    m.phone=document.getElementById('m-phone').value;
-    m.address=document.getElementById('m-address').value;
+    await fetch(`${API_URL}/members/${editingMemberId}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(mData) });
     toast('Member updated.');
   } else {
-    members.push({
-      id: nextMemberId++, first, last, email,
-      phone: document.getElementById('m-phone').value,
-      address: document.getElementById('m-address').value,
-      joined: new Date().toISOString().split('T')[0],
-      color: COLORS[Math.floor(Math.random()*COLORS.length)]
-    });
+    mData.joined = new Date().toISOString().split('T')[0];
+    mData.color = COLORS[Math.floor(Math.random()*COLORS.length)];
+    await fetch(`${API_URL}/members`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(mData) });
     toast(`${first} ${last} added as member.`);
   }
  
   closeModal('member-modal');
+  await fetchData();
   renderMembers();
   updateHeader();
 }
  
-function deleteMember(id) {
+async function deleteMember(id) {
   const active = borrows.filter(b=>!b.returned && b.memberId===id);
   if(active.length){ toast('Cannot remove — member has active borrows.'); return; }
   if(!confirm('Remove this member?')) return;
-  members = members.filter(m=>m.id!==id);
+  await fetch(`${API_URL}/members/${id}`, { method: 'DELETE' });
   toast('Member removed.');
+  await fetchData();
   renderMembers();
   updateHeader();
 }
@@ -419,4 +429,9 @@ document.querySelectorAll('.modal-overlay').forEach(o=>
 // ════════════════════════════════════════════
 //  INIT
 // ════════════════════════════════════════════
-renderDashboard();
+async function initApp() {
+    await fetchData();
+    renderDashboard();
+}
+
+initApp();

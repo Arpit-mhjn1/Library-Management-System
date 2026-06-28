@@ -1,0 +1,25 @@
+{
+  "name": "library-management-system",
+  "version": "1.0.0",
+  "description": "A modern **Library Management System** built using **HTML, CSS, and JavaScript** that helps librarians efficiently manage books, members, and borrowing activities. The system provides an interactive dashboard, book catalog management, borrowing/return tracking, and member records in a clean and user-friendly interface.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arpit-mhjn1/Library-Management-System.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Arpit-mhjn1/Library-Management-System/issues"
+  },
+  "homepage": "https://github.com/Arpit-mhjn1/Library-Management-System#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  }
+}
